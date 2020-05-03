@@ -194,5 +194,6 @@ kubectl run s3-list -i --rm --image amazon/aws-cli --generator run-pod/v1 --serv
 ```bash
 kubectl delete -f identity-webhook/
 kubectl delete secret pod-identity-webhook -n kube-system
+kubectl delete sa s3-list -n default
 aws s3 rb s3://$S3_BUCKET --force
 ```
