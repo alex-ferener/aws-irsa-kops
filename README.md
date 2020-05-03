@@ -180,12 +180,13 @@ EOF
 aws iam create-role --role-name $ROLE_NAME --assume-role-policy-document file://trust-policy.json
 aws iam attach-role-policy --role-name $ROLE_NAME --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
 
-kubectl create -n default sa s3-list
-kubectl annotate -n default sa s3-list eks.amazonaws.com/role-arn=arn:aws:iam::$ACCOUNT_ID:role/$ROLE_NAME
+kubectl config set-context --current --namespace=default
+kubectl create sa s3-list
+kubectl annotate sa s3-list eks.amazonaws.com/role-arn=arn:aws:iam::$ACCOUNT_ID:role/$ROLE_NAME
 
 sleep 8
 
-kubectl run -n default s3-list -i --rm --image amazon/aws-cli --generator=run-pod/v1 --serviceaccount=s3-list -- s3 ls
+kubectl run s3-list -i --rm --image amazon/aws-cli --generator run-pod/v1 --serviceaccount s3-list -- s3 ls
 ```
 
 ### 5. Cleanup
